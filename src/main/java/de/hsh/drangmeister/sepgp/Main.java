@@ -13,9 +13,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
@@ -28,104 +25,19 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Class<? extends Problem> problemClass = SyllablesProblem.class;
-        int numberRounds = 50;
+        GPRunner gpRunner = new GPRunner();
 
-        RunParameters[] runParameters = new RunParameters[]{
+        RunParameters runParams = new RunParameters(100, NumberIOProblem.class, 15, 10, 1 / 20.f, 1 / 6.f,
+                15, true,
+                0.2f, 0.5f, 0.2f, 0.1f);
 
-               new RunParameters(numberRounds, problemClass, 5, 10, 1 / 20.f, 1 / 6.f,
-                        15, false,
-                        0.2f, 0.5f, 0.2f, 0.1f),
-                new RunParameters(numberRounds, problemClass, 5, 10, 1 / 20.f, 1 / 6.f,
-                        15, false,
-                        0.2f, 0.5f, 0.2f, 0.1f),
-                new RunParameters(numberRounds, problemClass, 5, 10, 1 / 20.f, 1 / 6.f,
-                        15, false,
-                        0.2f, 0.5f, 0.2f, 0.1f),
+        RunResult runResult = gpRunner.runGP(runParams);
 
-
-                new RunParameters(numberRounds, problemClass, 5, 10, 1 / 20.f, 1 / 6.f,
-                        15, true,
-                        0.2f, 0.5f, 0.2f, 0.1f),
-                new RunParameters(numberRounds, problemClass, 10, 10, 1 / 20.f, 1 / 6.f,
-                        15, true,
-                        0.2f, 0.5f, 0.2f, 0.1f),
-                new RunParameters(numberRounds, problemClass, 15, 10, 1 / 20.f, 1 / 6.f,
-                        15, true,
-                        0.2f, 0.5f, 0.2f, 0.1f),
-                new RunParameters(numberRounds, problemClass, 20, 10, 1 / 20.f, 1 / 6.f,
-                        15, true,
-                        0.2f, 0.5f, 0.2f, 0.1f),
-                new RunParameters(numberRounds, problemClass, 30, 10, 1 / 20.f, 1 / 6.f,
-                        15, true,
-                        0.2f, 0.5f, 0.2f, 0.1f),
-
-                new RunParameters(numberRounds, problemClass, 15, 1, 1 / 20.f, 1 / 6.f,
-                        15, true,
-                        0.2f, 0.5f, 0.2f, 0.1f),
-                new RunParameters(numberRounds, problemClass, 15, 5, 1 / 20.f, 1 / 6.f,
-                        15, true,
-                        0.2f, 0.5f, 0.2f, 0.1f),
-                new RunParameters(numberRounds, problemClass, 15, 15, 1 / 20.f, 1 / 6.f,
-                        15, true,
-                        0.2f, 0.5f, 0.2f, 0.1f),
-                new RunParameters(numberRounds, problemClass, 15, 20, 1 / 20.f, 1 / 6.f,
-                        15, true,
-                        0.2f, 0.5f, 0.2f, 0.1f),
-
-                new RunParameters(numberRounds, problemClass, 15, 10, 1 / 4.f, 1 / 2.f,
-                        15, true,
-                        0.2f, 0.5f, 0.2f, 0.1f),
-                new RunParameters(numberRounds, problemClass, 15, 10, 1 / 8.f, 1 / 4.f,
-                        15, true,
-                        0.2f, 0.5f, 0.2f, 0.1f),
-                new RunParameters(numberRounds, problemClass, 15, 10, 1 / 16.f, 1 / 8.f,
-                        15, true,
-                        0.2f, 0.5f, 0.2f, 0.1f),
-                new RunParameters(numberRounds, problemClass, 15, 10, 1 / 32.f, 1 / 16.f,
-                        15, true,
-                        0.2f, 0.5f, 0.2f, 0.1f),
-                new RunParameters(numberRounds, problemClass, 15, 10, 1 / 64.f, 1 / 32.f,
-                        15, true,
-                        0.2f, 0.5f, 0.2f, 0.1f),
-                new RunParameters(numberRounds, problemClass, 15, 10, 1 / 128.f, 1 / 64.f,
-                        15, true,
-                        0.2f, 0.5f, 0.2f, 0.1f),
-
-                new RunParameters(numberRounds, problemClass, 15, 10, 1 / 20.f, 1 / 6.f,
-                        5, true,
-                        0.2f, 0.5f, 0.2f, 0.1f),
-                new RunParameters(numberRounds, problemClass, 15, 10, 1 / 20.f, 1 / 6.f,
-                        10, true,
-                        0.2f, 0.5f, 0.2f, 0.1f),
-                new RunParameters(numberRounds, problemClass, 15, 10, 1 / 20.f, 1 / 6.f,
-                        20, true,
-                        0.2f, 0.5f, 0.2f, 0.1f),
-                new RunParameters(numberRounds, problemClass, 15, 10, 1 / 20.f, 1 / 6.f,
-                        30, true,
-                        0.2f, 0.5f, 0.2f, 0.1f),
-                new RunParameters(numberRounds, problemClass, 15, 10, 1 / 20.f, 1 / 6.f,
-                        40, true,
-                        0.2f, 0.5f, 0.2f, 0.1f),
-
-
-        };
-
-        long startTime = System.currentTimeMillis();
-        int done = 0;
-        for (RunParameters runParameter : runParameters) {
-            GPRunner gpRunner = new GPRunner();
-            RunResult runResult = gpRunner.runGP(runParameter);
-            printResults(runParameter.getProblemClass().getSimpleName().replace("Problem", ""), runResult, runParameter);
-            System.out.println("[" + LocalTime.now().truncatedTo(ChronoUnit.SECONDS).format(DateTimeFormatter.ISO_LOCAL_TIME) + "] " + (++done) + "/" + runParameters.length + " runs done");
-        }
-
-        long took = System.currentTimeMillis() - startTime;
-        System.out.println("Time for all runs: " + took / 60000 + "min " + (took % 60000) / 1000 + "s " + (took % 1000) + "ms\n");
+        printAndWriteResultsToFile(runParams.getProblemClass().getSimpleName().replace("Problem", ""), runResult, runParams);
 
     }
 
-    private static void printResults(String problemName, RunResult runResult, RunParameters runParameters) {
+    private static void printAndWriteResultsToFile(String problemName, RunResult runResult, RunParameters runParameters) {
 
         int perfectCounter = 0;
         StringBuilder summarySb = new StringBuilder();
